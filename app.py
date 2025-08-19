@@ -1,6 +1,7 @@
 from flask import Flask, request, send_from_directory, render_template_string
 from cryptography.fernet import Fernet
 import os
+from werkzeug.utils import secure_filename # I imported this to help encrypt our file
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
@@ -15,10 +16,10 @@ def upload_file():
         file = request.files['file']
         if file:
             data = file.read()
-            encrypted_data = fernet.encrypt(data)
-            filepath = os.path.join(UPLOAD_FOLDER, file.filename)
-            with open(filepath, 'wb') as f:
-                f.write(encrypted_data)
+            encrypted = fernet.encrypt(data)
+            filename = secure_filename(file.filename) + '.enc' # this is where I used the library I imported. It encrypt the file in the variable filename
+            with open(os.path.join(UPLOAD_FOLDER, filename), 'wb') as f:  # Calling the encrypted text (filename) as f
+                f.write(encrypted) 
     files = os.listdir(UPLOAD_FOLDER)
     return render_template_string('''
         <h1>Secure File Upload & Download</h1>
@@ -42,3 +43,4 @@ def download_file(filename):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
