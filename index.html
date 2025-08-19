@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Sharing</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Secure File Sharing</h1>
+    <a href="/upload">Upload a File</a>
+    <h3>Files</h3>
+    <ul>
+    {% for file in files %}
+        <li><a href="/download/{{ file }}">{{ file }}</a></li>
+    {% endfor %}
+    </ul>
+</body>
+</html>
